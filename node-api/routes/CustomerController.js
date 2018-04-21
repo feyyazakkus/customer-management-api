@@ -6,6 +6,8 @@ var express = require('express'),
 router.get('/customers', getCustomers);
 router.get('/customers/:id', getCustomerByID);
 router.post('/customers', addCustomer);
+router.put('/customers/:id', updateCustomer);
+router.delete('/customers/:id', deleteCustomer);
 
 function getCustomers(req, res) {
     Customer.find(function (err, customers) {
@@ -18,7 +20,9 @@ function getCustomers(req, res) {
 }
 
 function getCustomerByID(req, res) {
-    Customer.findOne({customerID: req.params.id}, function (err, customer) {
+    Customer.findOne({
+        customerID: req.params.id
+    }, function (err, customer) {
         if (err) logger.error(err);
 
         if (customer) {
@@ -42,7 +46,7 @@ function addCustomer(req, res) {
             first: req.body.firstname,
             last: req.body.lastname
         },
-        birthday: req.body.birtday,
+        birthday: req.body.birthday,
         gender: req.body.gender
     });
 
@@ -56,6 +60,70 @@ function addCustomer(req, res) {
             res.json({
                 success: false,
                 message: 'Cannot create customer'
+            });
+        }
+    });
+}
+
+function updateCustomer(req, res) {
+    Customer.findOne({
+        customerID: req.params.id
+    }, function (err, customer) {
+        if (err) logger.error(err);
+
+        if (customer) {
+            customer.name.first = req.body.firstname || customer.name.first;
+            customer.name.last = req.body.lastname || customer.name.last;
+            customer.birthday = req.body.birthday || customer.birthday;
+            customer.gender = req.body.gender || customer.gender;
+            customer.lastContact = req.body.lastContact || customer.lastContact;
+
+            customer.save(function (err, result) {
+                if (!err) {
+                    res.json({
+                        success: true,
+                        customer: result
+                    });
+                } else {
+                    logger.error(err);
+                    res.json({
+                        success: false,
+                        message: 'Cannot update customer'
+                    });
+                }
+            });
+            
+        } else {
+            res.json({
+                success: false,
+                message: 'Customer not found'
+            });
+        }
+    });
+}
+
+function deleteCustomer(req, res) {
+    Customer.findOne({
+        customerID: req.params.id
+    }, function (err, customer) {
+        if (err) logger.error(err);
+        
+        if (customer) {
+            customer.remove(function (err) {
+                if (!err) {
+                    res.json({ success: true });
+                } else {
+                    loggger.error(err);
+                    res.json({
+                        success: false,
+                        message: 'Cannot delete customer'
+                    });
+                }
+            });
+        } else {
+            res.json({
+                success: false,
+                message: 'Customer not found'
             });
         }
     });
