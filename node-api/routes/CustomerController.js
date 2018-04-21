@@ -55,7 +55,10 @@ function addCustomer(req, res) {
         if (err) logger.error(err);
 
         if (customer) {
-            res.json({success: true});
+            res.json({
+                success: true,
+                customer: customer
+            });
         } else {
             res.json({
                 success: false,
