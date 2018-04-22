@@ -30,8 +30,10 @@ describe("Testing api server..", function () {
         chai.request(server)
         .post('/api/customers')
         .send({
-            firstname: 'Test User',
-            lastname: 'Test User',
+            name: {
+                first: 'Test User',
+                last: 'Test User',
+            },
             birthday: '1990-02-20',
             gender: 'm'
         })

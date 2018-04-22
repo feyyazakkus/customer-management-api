@@ -69,15 +69,17 @@ function addCustomer(req, res) {
 }
 
 function updateCustomer(req, res) {
-    console.log(req.body);
+
     Customer.findOne({
         customerID: req.params.id
     }, function (err, customer) {
         if (err) logger.error(err);
 
         if (customer) {
-            customer.name.first = req.body.name.first || customer.name.first;
-            customer.name.last = req.body.name.last || customer.name.last;
+            if (req.body.name) {
+                customer.name.first = req.body.name.first;
+                customer.name.last = req.body.name.last;
+            }            
             customer.birthday = req.body.birthday || customer.birthday;
             customer.gender = req.body.gender || customer.gender;
             customer.lastContact = req.body.lastContact || customer.lastContact;
