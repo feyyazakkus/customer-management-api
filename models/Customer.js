@@ -19,7 +19,10 @@ var CustomerSchema = mongoose.Schema({
     },
     birthday: String,
     gender: String,
-    lastContact: Date,
+    lastContact: {
+        type: Date,
+        default: Date.now
+    },
     customerLifetimeValue: Number,    
     created_at: {
         type: Date,
