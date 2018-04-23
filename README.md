@@ -1,4 +1,4 @@
-# Customer Management API
+# Customer Management APP
 ![Build Status](https://travis-ci.org/feyyazakkus/customer-management-api.svg?branch=master)
 API Service for Customer Management App
 
