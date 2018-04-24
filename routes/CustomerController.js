@@ -44,7 +44,7 @@ function addCustomer(req, res) {
     var newCustomer = new Customer({
         name: {
             first: req.body.name.first,
-            last: req.body.name.first
+            last: req.body.name.last
         },
         birthday: req.body.birthday,
         gender: req.body.gender
