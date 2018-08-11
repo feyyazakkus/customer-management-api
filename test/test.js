@@ -18,7 +18,7 @@ describe("Testing api server..", function () {
 
     it('should get all customers on api/customers GET', function(done) {
         chai.request(server)
-        .get('/api/customers')
+        .post('/api/customers')
         .end(function(err, res) {
             res.should.have.status(200);
             res.body.success.should.equal(true);
@@ -28,7 +28,7 @@ describe("Testing api server..", function () {
 
     it('should add a new customer on api/customers POST', function(done) {
         chai.request(server)
-        .post('/api/customers')
+        .post('/api/customers/add')
         .send({
             name: {
                 first: 'Test User',
