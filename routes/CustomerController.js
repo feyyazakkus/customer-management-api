@@ -3,19 +3,37 @@ var express = require('express'),
     logger = require('../logger'),
     Customer = require('../models/Customer');
 
-router.get('/customers', getCustomers);
+router.post('/customers', getCustomers);
 router.get('/customers/:id', getCustomerByID);
-router.post('/customers', addCustomer);
+router.post('/customers/add', addCustomer);
 router.put('/customers/:id', updateCustomer);
 router.delete('/customers/:id', deleteCustomer);
 
 function getCustomers(req, res) {
-    Customer.find(function (err, customers) {
+    var limit = req.body.limit || 10;
+    var offset = req.body.offset || 0;
+    var sortRule = { customerID: 1 };
+
+    if (req.body.sortBy) {
+        sortRule = {};
+        sortRule[req.body.sortBy] = req.body.sortDirection || 1;
+    }
+    
+    Customer.find()
+    .skip(parseInt(offset))
+    .limit(parseInt(limit))
+    .sort(sortRule)
+    .exec(function (err, customers) {
+
         if (err) logger.error(err);
-        res.json({
-            success: true,
-            customers: customers
-        });
+
+        Customer.find().count(function (e, count) {
+            res.json({
+                success: true,
+                customers: customers,
+                totalCount: count
+            });    
+        })
     });
 }
 
